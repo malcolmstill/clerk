@@ -44,6 +44,7 @@ fn printHelp(stdout: anytype) !void {
     try stdout.print("\n", .{});
     try stdout.print("\ttodo [text]\t\tAdd a new todo\n", .{});
     try stdout.print("\tdone [id]\t\tMark todo as done\n", .{});
+    try stdout.print("\tstatus [id] [status]\tChange status\n", .{});
     try stdout.print("\tedit [id]\t\tEdit todo as done\n", .{});
     try stdout.print("\tref [id] [refs..]\tAdd references to todo\n", .{});
     try stdout.print("\tunref [id] [ref]\tRemove [ref] from [id]\n", .{});
