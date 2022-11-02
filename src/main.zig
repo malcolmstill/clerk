@@ -24,8 +24,17 @@ pub fn main() !void {
         process.exit(1);
     };
 
-    if (mem.eql(u8, command, "add")) {
+    if (mem.eql(u8, command, "todo")) {
+        const text = it.next() orelse return;
+
+        try stdout.print("[1242] TODO: {s}\n", .{text});
+    } else if (mem.eql(u8, command, "done")) {
         //
+    } else {
+        try printVersion(stdout);
+        try stdout.print("Unknown command: \"{s}\"\n\n", .{command});
+        try stdout.print("Commands:\n", .{});
+        try printHelp(stdout);
     }
 
     try bw.flush(); // don't forget to flush!
@@ -33,8 +42,12 @@ pub fn main() !void {
 
 fn printHelp(stdout: anytype) !void {
     try stdout.print("\n", .{});
-    try stdout.print("\tadd\tAdd a new note to the database\n", .{});
-    try stdout.print("\tdone\tMark note as done\n", .{});
+    try stdout.print("\ttodo [text]\t\tAdd a new todo\n", .{});
+    try stdout.print("\tdone [id]\t\tMark todo as done\n", .{});
+    try stdout.print("\tedit [id]\t\tEdit todo as done\n", .{});
+    try stdout.print("\tref [id] [refs..]\tAdd references to todo\n", .{});
+    try stdout.print("\tunref [id] [ref]\tRemove [ref] from [id]\n", .{});
+    try stdout.print("\tsearch [text]\t\tMark todo as done\n", .{});
     try stdout.print("\n", .{});
 }
 
