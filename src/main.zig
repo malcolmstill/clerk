@@ -1,4 +1,7 @@
 const std = @import("std");
+const ansi = @import("ansi-term");
+const format = ansi.format;
+const style = ansi.style;
 const io = std.io;
 const mem = std.mem;
 const process = std.process;
@@ -17,7 +20,7 @@ pub fn main() !void {
 
     const command = it.next() orelse {
         try printVersion(stdout);
-        try stdout.print("Expected <command>\n\n", .{});
+        try printError(stdout, "Expected <command>\n\n");
         try stdout.print("Commands:\n", .{});
         try printHelp(stdout);
         try bw.flush(); // don't forget to flush!
@@ -53,7 +56,17 @@ fn printHelp(stdout: anytype) !void {
 }
 
 fn printVersion(stdout: anytype) !void {
+    const bold = .{ .font_style = style.FontStyle.bold };
+    try format.updateStyle(stdout, bold, null);
     try stdout.print("clerk v0.0.1\n\n", .{});
+    try format.updateStyle(stdout, .{}, bold);
+}
+
+fn printError(stdout: anytype, message: []const u8) !void {
+    const err = .{ .foreground = style.Color.Red };
+    try format.updateStyle(stdout, err, null);
+    try stdout.print("{s}", .{message});
+    try format.updateStyle(stdout, .{}, err);
 }
 
 test "simple test" {

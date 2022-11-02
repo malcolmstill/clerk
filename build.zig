@@ -14,6 +14,7 @@ pub fn build(b: *std.build.Builder) void {
     const exe = b.addExecutable("clerk", "src/main.zig");
     exe.setTarget(target);
     exe.setBuildMode(mode);
+    exe.addPackagePath("ansi-term", "lib/ansi-term/src/main.zig");
     exe.install();
 
     const run_cmd = exe.run();
