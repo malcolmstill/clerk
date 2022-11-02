@@ -1,10 +1,10 @@
 const std = @import("std");
-const sqlite = @import("sqlite");
 const fs = std.fs;
 const io = std.io;
 const process = std.process;
 const print = @import("print.zig");
 const cmd = @import("command.zig");
+const Database = @import("db.zig").Database;
 
 pub fn main() !void {
     // stdout is for the actual output of your application, for example if you
@@ -14,14 +14,7 @@ pub fn main() !void {
     var bw = io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    _ = try sqlite.Db.init(.{
-        .mode = sqlite.Db.Mode{ .File = ".clerk.db" },
-        .open_flags = .{
-            .write = true,
-            .create = true,
-        },
-        .threading_mode = .MultiThread,
-    });
+    var db = try Database.init();
 
     var it = process.args();
 
@@ -55,7 +48,9 @@ pub fn main() !void {
                 process.exit(1);
             };
 
-            try stdout.print("[1242] TODO: {s}\n", .{text});
+            const id = try db.addTodo(text);
+
+            try stdout.print("[{}] TODO: {s}\n", .{ id, text });
         },
         else => {},
     }
