@@ -64,6 +64,14 @@ pub fn main() !void {
             try db.printTodo(stdout, id);
         },
         .todo => try db.printAllTodos(stdout),
+        .search => {
+            const search_term = it.next() orelse {
+                try print.searchExpectsTerm(stdout);
+                return;
+            };
+
+            try db.search(stdout, search_term);
+        },
         else => {},
     }
 }

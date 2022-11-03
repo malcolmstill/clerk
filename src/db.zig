@@ -122,4 +122,19 @@ pub const Database = struct {
             .{ .id = id },
         )) orelse return error.NoSuchRow;
     }
+
+    pub fn search(self: *Database, stdout: anytype, search_term: []const u8) !void {
+        var stmt = try self.db.prepare("SELECT id, text, status FROM todo_fts WHERE todo_fts MATCH ? ORDER BY rank");
+        defer stmt.deinit();
+
+        var it = try stmt.iterator(Todo, .{ .search_term = search_term });
+
+        while (true) {
+            var arena = std.heap.ArenaAllocator.init(self.alloc);
+            defer arena.deinit();
+
+            const todo = (try it.nextAlloc(arena.allocator(), .{})) orelse break;
+            try print.todo(stdout, todo.id, todo.text, todo.status);
+        }
+    }
 };

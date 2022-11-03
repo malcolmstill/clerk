@@ -55,6 +55,10 @@ pub fn addExpectsText(stdout: anytype) !void {
     try err(stdout, "Expected: clerk add <text>\n");
 }
 
+pub fn searchExpectsTerm(stdout: anytype) !void {
+    try err(stdout, "Expected: clerk search <term>\n");
+}
+
 pub fn doneExpectsId(stdout: anytype) !void {
     try err(stdout, "Expected: clerk done <id>\n");
 }

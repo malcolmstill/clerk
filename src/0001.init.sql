@@ -27,4 +27,20 @@ CREATE VIRTUAL TABLE todo_fts USING fts5(
     status UNINDEXED,
     content='todo',
     content_rowid='id'
-)
+);
+--
+CREATE TRIGGER todo_after_insert AFTER INSERT ON todo
+BEGIN
+    INSERT INTO todo_fts (rowid, text, status) VALUES (new.id, new.text, new.status);
+END;
+--
+CREATE TRIGGER todo_after_delete AFTER DELETE ON todo
+BEGIN
+    INSERT INTO todo_fts (todo_fts, rowid, text, status) VALUES ('delete', old.id, old.text, old.status);
+END;
+--
+CREATE TRIGGER todo_after_update AFTER UPDATE ON todo
+BEGIN
+    INSERT INTO todo_fts (todo_fts, rowid, text, status) VALUES ('delete', old.id, old.text, old.status);
+    INSERT INTO todo_fts (rowid, text, status) VALUES (new.id, new.text, new.status);
+END;
