@@ -1,11 +1,6 @@
 # Clerk
 
-## (Possible) Features
+## Installation
 
-- Add todos via the command line
-- Edit
-- References
-    - Parse text to find references
-    - Or any other arg after text (that is valid integer) is taken as reference
-- Search todos
-- LiteStream support
+Download a binary for your platform from [our release page](https://github.com/malcolmstill/clerk/releases)
+
