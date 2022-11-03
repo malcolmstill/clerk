@@ -31,10 +31,6 @@ pub fn err(stdout: anytype, message: []const u8) !void {
 }
 
 pub fn todo(stdout: anytype, id: usize, text: []const u8, status: []const u8) !void {
-    const yellow = .{ .foreground = style.Color.Yellow, .font_style = style.FontStyle.bold };
-    const red = .{ .foreground = style.Color.Red, .font_style = style.FontStyle.bold };
-    const green = .{ .foreground = style.Color.Green, .font_style = style.FontStyle.bold };
-
     try stdout.print("[", .{});
     try format.updateStyle(stdout, yellow, null);
     try stdout.print("{}", .{id});
@@ -54,3 +50,19 @@ pub fn todo(stdout: anytype, id: usize, text: []const u8, status: []const u8) !v
     try stdout.print(" {s}\n", .{text});
     try format.updateStyle(stdout, .{}, null);
 }
+
+pub fn doneExpectsId(stdout: anytype) !void {
+    try err(stdout, "Expected: clerk done <id>\n");
+}
+
+pub fn noSuchId(stdout: anytype, id: usize) !void {
+    try stdout.print("Couldn't find [", .{});
+    try format.updateStyle(stdout, yellow, null);
+    try stdout.print("{}", .{id});
+    try format.updateStyle(stdout, .{}, null);
+    try stdout.print("]\n", .{});
+}
+
+const yellow = .{ .foreground = style.Color.Yellow, .font_style = style.FontStyle.bold };
+const red = .{ .foreground = style.Color.Red, .font_style = style.FontStyle.bold };
+const green = .{ .foreground = style.Color.Green, .font_style = style.FontStyle.bold };
