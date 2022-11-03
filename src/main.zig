@@ -56,10 +56,8 @@ pub fn main() !void {
         },
         .done => {
             const arg = it.next() orelse {
-                try print.version(stdout);
-                try print.err(stdout, "Expected: clerk done <id>\n\n");
-                try bw.flush();
-                process.exit(1);
+                try print.doneExpectsId(stdout);
+                return;
             };
 
             const id = try fmt.parseInt(usize, arg, 10);
