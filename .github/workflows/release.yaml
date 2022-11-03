@@ -19,5 +19,5 @@ jobs:
       - run: zig build -Drelease-safe=true
       - uses: actions/upload-artifact@v3
         with:
-          name: clerk-${{matrix.tag}}
+          name: clerk-${{matrix.os}}
           path: zig-out/bin/clerk
