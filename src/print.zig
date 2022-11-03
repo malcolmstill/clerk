@@ -17,10 +17,12 @@ pub fn help(stdout: anytype) !void {
     try stdout.print("\n", .{});
 }
 
+const version_number = @embedFile(".version");
+
 pub fn version(stdout: anytype) !void {
     const bold = .{ .font_style = style.FontStyle.bold };
     try format.updateStyle(stdout, bold, null);
-    try stdout.print("clerk v0.0.1\n\n", .{});
+    try stdout.print("clerk {s}\n", .{version_number});
     try format.updateStyle(stdout, .{}, bold);
 }
 

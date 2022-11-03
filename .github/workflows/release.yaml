@@ -1,0 +1,23 @@
+name: Clerk release
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build_and_release:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.10.0
+      - run: echo $GITHUB_REF_NAME > src/.version
+      - run: zig build -Drelease-safe=true
+      - uses: actions/upload-artifact@v3
+        with:
+          name: clerk-${{matrix.tag}}
+          path: zig-out/bin/clerk
