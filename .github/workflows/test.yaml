@@ -17,6 +17,14 @@ jobs:
         with:
           version: 0.10.0
       - run: zig build -Dtarget=x86_64-linux
+  build_aarch64-macos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.10.0
+      - run: zig build -Dtarget=aarch64-macos
   lint:
     runs-on: ubuntu-latest
     steps:
