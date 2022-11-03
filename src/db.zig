@@ -12,9 +12,7 @@ pub const Database = struct {
     db: sqlite.Db,
     alloc: mem.Allocator,
 
-    pub fn init(
-        alloc: mem.Allocator,
-    ) !Database {
+    pub fn init(alloc: mem.Allocator) !Database {
         const home = os.getenv("HOME") orelse "";
         const slices: [3][]const u8 = .{ home, "/", ".clerk.db" };
         const path = try mem.concatWithSentinel(alloc, u8, slices[0..], 0);
