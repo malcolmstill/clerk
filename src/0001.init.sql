@@ -20,3 +20,11 @@ CREATE TABLE ref (
 --
 INSERT INTO status (id) VALUES ('TODO');
 INSERT INTO status (id) VALUES ('DONE');
+--
+CREATE VIRTUAL TABLE todo_fts USING fts5(
+    id UNINDEXED,
+    text,
+    status UNINDEXED,
+    content='todo',
+    content_rowid='id'
+)
