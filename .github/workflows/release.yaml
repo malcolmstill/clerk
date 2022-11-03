@@ -1,4 +1,4 @@
-name: Clerk release
+name: clerk release
 on:
   push:
     tags:
