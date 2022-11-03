@@ -6,7 +6,6 @@ const style = ansi.style;
 
 pub fn help(stdout: anytype) !void {
     try version(stdout);
-    try stdout.print("\n", .{});
     try stdout.print("\tadd [text]\t\tAdd a new todo\n", .{});
     try stdout.print("\tdone [id]\t\tMark todo as done\n", .{});
     try stdout.print("\tstatus [id] [status]\tChange status\n", .{});
