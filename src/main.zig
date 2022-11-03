@@ -72,6 +72,5 @@ pub fn main() !void {
 
             try db.search(stdout, search_term);
         },
-        else => {},
     }
 }
