@@ -17,6 +17,8 @@ pub const Database = struct {
             .threading_mode = .MultiThread,
         });
 
+        _ = try db.pragma(void, .{}, "foreign_keys", "on");
+
         const row = (try db.pragma(usize, .{}, "user_version", null)) orelse return error.ReadUserVersionFailed;
 
         if (row < migrations.len) {
@@ -42,15 +44,30 @@ pub const Database = struct {
         self.db.deinit();
     }
 
-    pub fn addTodo(self: *Database, text: []const u8, _: process.ArgIterator) !usize {
-        const query =
-            \\INSERT INTO todo (text, status) VALUES (?, 'TODO') RETURNING id;
-        ;
+    pub fn addTodo(self: *Database, text: []const u8, it: *process.ArgIterator) !usize {
+        var savepoint = try self.db.savepoint("todo_with_references");
+        defer savepoint.rollback();
 
-        const row = try self.db.one(usize, query, .{}, .{
-            .text = text,
-        });
+        const id = try self.db.one(
+            usize,
+            "INSERT INTO todo (text, status) VALUES (?, 'TODO') RETURNING id;",
+            .{},
+            .{ .text = text },
+        );
 
-        return row orelse return error.AddTodoFailed;
+        while (it.next()) |arg| {
+            const ref = try std.fmt.parseInt(usize, arg, 10);
+
+            _ = try self.db.one(
+                usize,
+                "INSERT INTO ref (id, referer) VALUES (?, ?);",
+                .{},
+                .{ .ref = ref, .id = id },
+            );
+        }
+
+        savepoint.commit();
+
+        return id orelse return error.AddTodoFailed;
     }
 };

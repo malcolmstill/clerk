@@ -46,7 +46,7 @@ pub fn main() !void {
                 process.exit(1);
             };
 
-            const id = try db.addTodo(text, it);
+            const id = try db.addTodo(text, &it);
 
             try stdout.print("[{}] TODO: {s}\n", .{ id, text });
         },
