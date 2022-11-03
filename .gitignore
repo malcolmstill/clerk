@@ -3,4 +3,3 @@ zig-cache
 bin
 clerk.db
 .clerk.db
-.version
