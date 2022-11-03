@@ -100,11 +100,11 @@ pub const Database = struct {
     }
 
     pub fn markDone(self: *Database, id: usize) !void {
-        _ = try self.db.one(
+        _ = (try self.db.one(
             usize,
-            "UPDATE todo SET status = 'DONE' WHERE id = ?",
+            "UPDATE todo SET status = 'DONE' WHERE id = ? returning id;",
             .{},
             .{ .id = id },
-        );
+        )) orelse return error.NoSuchRow;
     }
 };

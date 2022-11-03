@@ -18,6 +18,8 @@ pub fn main() !void {
     var db = try Database.init(gpa.allocator());
     defer db.deinit();
 
+    defer _ = bw.flush() catch {};
+
     var it = process.args();
 
     _ = it.next();
@@ -61,11 +63,13 @@ pub fn main() !void {
             };
 
             const id = try fmt.parseInt(usize, arg, 10);
-            try db.markDone(id);
+            db.markDone(id) catch {
+                try print.noSuchId(stdout, id);
+                return;
+            };
+
             try db.printTodo(stdout, id);
         },
         else => {},
     }
-
-    try bw.flush();
 }
