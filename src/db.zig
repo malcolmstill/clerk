@@ -1,13 +1,19 @@
 const std = @import("std");
 const fmt = std.fmt;
+const mem = std.mem;
 const sqlite = @import("sqlite");
+const print = @import("print.zig");
 const migrations = @import("migration.zig").migrations;
 const process = std.process;
+var gpa = std.heap.GeneralPurposeAllocator(.{});
 
 pub const Database = struct {
     db: sqlite.Db,
+    alloc: mem.Allocator,
 
-    pub fn init() !Database {
+    pub fn init(
+        alloc: mem.Allocator,
+    ) !Database {
         var db = try sqlite.Db.init(.{
             .mode = sqlite.Db.Mode{ .File = "clerk.db" },
             .open_flags = .{
@@ -36,6 +42,7 @@ pub const Database = struct {
         }
 
         return Database{
+            .alloc = alloc,
             .db = db,
         };
     }
@@ -69,5 +76,19 @@ pub const Database = struct {
         savepoint.commit();
 
         return id orelse return error.AddTodoFailed;
+    }
+
+    pub fn printTodo(self: *Database, stdout: anytype, id: usize) !void {
+        var stmt = try self.db.prepare("SELECT id, text, status FROM todo WHERE id = ?");
+        defer stmt.deinit();
+
+        const row = (try stmt.oneAlloc(
+            struct { id: usize, text: []u8, status: []u8 },
+            self.alloc,
+            .{},
+            .{ .id = id },
+        )) orelse return error.NoRow;
+
+        try print.todo(stdout, row.id, row.text, row.status);
     }
 };

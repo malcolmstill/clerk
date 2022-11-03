@@ -1,3 +1,5 @@
+const std = @import("std");
+const mem = std.mem;
 const ansi = @import("ansi-term");
 const format = ansi.format;
 const style = ansi.style;
@@ -26,4 +28,30 @@ pub fn err(stdout: anytype, message: []const u8) !void {
     try format.updateStyle(stdout, sty, null);
     try stdout.print("{s}", .{message});
     try format.updateStyle(stdout, .{}, sty);
+}
+
+pub fn todo(stdout: anytype, id: usize, text: []const u8, status: []const u8) !void {
+    const yellow = .{ .foreground = style.Color.Yellow };
+    const red = .{ .foreground = style.Color.Red };
+    const green = .{ .foreground = style.Color.Green };
+
+    try stdout.print("[", .{});
+    try format.updateStyle(stdout, yellow, null);
+    try stdout.print("{}", .{id});
+    try format.updateStyle(stdout, .{}, yellow);
+    try stdout.print("] ", .{});
+
+    if (mem.eql(u8, status, "TODO")) {
+        try format.updateStyle(stdout, red, null);
+        try stdout.print("{s}", .{status});
+    } else if (mem.eql(u8, status, "DONE")) {
+        try format.updateStyle(stdout, green, null);
+        try stdout.print("{s}", .{status});
+    }
+    try format.updateStyle(stdout, .{}, null);
+
+    const bold = .{ .font_style = style.FontStyle.bold };
+    try format.updateStyle(stdout, bold, null);
+    try stdout.print(": {s}\n", .{text});
+    try format.updateStyle(stdout, .{}, null);
 }

@@ -5,13 +5,16 @@ const process = std.process;
 const print = @import("print.zig");
 const cmd = @import("command.zig");
 const Database = @import("db.zig").Database;
+var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
 pub fn main() !void {
+    defer _ = gpa.deinit();
+
     const stdout_file = io.getStdOut().writer();
     var bw = io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    var db = try Database.init();
+    var db = try Database.init(gpa.allocator());
     defer db.deinit();
 
     var it = process.args();
@@ -48,7 +51,8 @@ pub fn main() !void {
 
             const id = try db.addTodo(text, &it);
 
-            try stdout.print("[{}] TODO: {s}\n", .{ id, text });
+            // try stdout.print("[{}] TODO: {s}\n", .{ id, text });
+            try db.printTodo(stdout, id);
         },
         else => {},
     }
