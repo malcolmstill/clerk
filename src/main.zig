@@ -63,6 +63,9 @@ pub fn main() !void {
 
             try db.printTodo(stdout, id);
         },
+        .todo => {
+            try db.printAllTodos(stdout);
+        },
         else => {},
     }
 }

@@ -12,6 +12,12 @@ pub const Database = struct {
     db: sqlite.Db,
     alloc: mem.Allocator,
 
+    const Todo = struct {
+        id: usize,
+        text: []const u8,
+        status: []const u8,
+    };
+
     pub fn init(alloc: mem.Allocator) !Database {
         const home = os.getenv("HOME") orelse "";
         const slices: [3][]const u8 = .{ home, "/", ".clerk.db" };
@@ -89,14 +95,23 @@ pub const Database = struct {
         var stmt = try self.db.prepare("SELECT id, text, status FROM todo WHERE id = ?");
         defer stmt.deinit();
 
-        const row = (try stmt.oneAlloc(
-            struct { id: usize, text: []const u8, status: []const u8 },
-            arena.allocator(),
-            .{},
-            .{ .id = id },
-        )) orelse return error.NoRow;
+        const todo = (try stmt.oneAlloc(Todo, arena.allocator(), .{}, .{ .id = id })) orelse return error.NoRow;
+        try print.todo(stdout, todo.id, todo.text, todo.status);
+    }
 
-        try print.todo(stdout, row.id, row.text, row.status);
+    pub fn printAllTodos(self: *Database, stdout: anytype) !void {
+        var stmt = try self.db.prepare("SELECT id, text, status FROM todo WHERE status = 'TODO'");
+        defer stmt.deinit();
+
+        var it = try stmt.iterator(Todo, .{});
+
+        while (true) {
+            var arena = std.heap.ArenaAllocator.init(self.alloc);
+            defer arena.deinit();
+
+            const todo = (try it.nextAlloc(arena.allocator(), .{})) orelse break;
+            try print.todo(stdout, todo.id, todo.text, todo.status);
+        }
     }
 
     pub fn markDone(self: *Database, id: usize) !void {

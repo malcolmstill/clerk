@@ -4,6 +4,7 @@ const mem = std.mem;
 pub const Command = enum {
     add,
     done,
+    todo,
     status,
     edit,
     ref,
@@ -16,6 +17,8 @@ pub fn parse(command: []const u8) !Command {
         return .add;
     } else if (mem.eql(u8, command, "done")) {
         return .done;
+    } else if (mem.eql(u8, command, "todo")) {
+        return .todo;
     } else if (mem.eql(u8, command, "status")) {
         return .status;
     } else if (mem.eql(u8, command, "edit")) {
