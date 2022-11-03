@@ -50,8 +50,6 @@ pub fn main() !void {
             };
 
             const id = try db.addTodo(text, &it);
-
-            // try stdout.print("[{}] TODO: {s}\n", .{ id, text });
             try db.printTodo(stdout, id);
         },
         else => {},

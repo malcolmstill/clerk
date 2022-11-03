@@ -79,12 +79,15 @@ pub const Database = struct {
     }
 
     pub fn printTodo(self: *Database, stdout: anytype, id: usize) !void {
+        var arena = std.heap.ArenaAllocator.init(self.alloc);
+        defer arena.deinit();
+
         var stmt = try self.db.prepare("SELECT id, text, status FROM todo WHERE id = ?");
         defer stmt.deinit();
 
         const row = (try stmt.oneAlloc(
-            struct { id: usize, text: []u8, status: []u8 },
-            self.alloc,
+            struct { id: usize, text: []const u8, status: []const u8 },
+            arena.allocator(),
             .{},
             .{ .id = id },
         )) orelse return error.NoRow;
