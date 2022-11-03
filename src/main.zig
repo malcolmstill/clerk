@@ -25,11 +25,8 @@ pub fn main() !void {
     _ = it.next();
 
     const command_arg = it.next() orelse {
-        try print.version(stdout);
-        try stdout.print("Commands:\n", .{});
         try print.help(stdout);
-        try bw.flush();
-        process.exit(1);
+        return;
     };
 
     const command = cmd.parse(command_arg) catch {
@@ -45,10 +42,8 @@ pub fn main() !void {
     switch (command) {
         .add => {
             const text = it.next() orelse {
-                try print.version(stdout);
-                try print.err(stdout, "Expected: clerk todo <text>\n\n");
-                try bw.flush();
-                process.exit(1);
+                try print.addExpectsText(stdout);
+                return;
             };
 
             const id = try db.addTodo(text, &it);

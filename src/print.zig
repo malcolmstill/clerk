@@ -5,6 +5,7 @@ const format = ansi.format;
 const style = ansi.style;
 
 pub fn help(stdout: anytype) !void {
+    try version(stdout);
     try stdout.print("\n", .{});
     try stdout.print("\tadd [text]\t\tAdd a new todo\n", .{});
     try stdout.print("\tdone [id]\t\tMark todo as done\n", .{});
@@ -49,6 +50,10 @@ pub fn todo(stdout: anytype, id: usize, text: []const u8, status: []const u8) !v
     try format.updateStyle(stdout, .{}, null);
     try stdout.print(" {s}\n", .{text});
     try format.updateStyle(stdout, .{}, null);
+}
+
+pub fn addExpectsText(stdout: anytype) !void {
+    try err(stdout, "Expected: clerk add <text>\n");
 }
 
 pub fn doneExpectsId(stdout: anytype) !void {
