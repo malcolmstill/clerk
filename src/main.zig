@@ -1,6 +1,7 @@
 const std = @import("std");
 const fs = std.fs;
 const io = std.io;
+const fmt = std.fmt;
 const process = std.process;
 const print = @import("print.zig");
 const cmd = @import("command.zig");
@@ -50,6 +51,18 @@ pub fn main() !void {
             };
 
             const id = try db.addTodo(text, &it);
+            try db.printTodo(stdout, id);
+        },
+        .done => {
+            const arg = it.next() orelse {
+                try print.version(stdout);
+                try print.err(stdout, "Expected: clerk done <id>\n\n");
+                try bw.flush();
+                process.exit(1);
+            };
+
+            const id = try fmt.parseInt(usize, arg, 10);
+            try db.markDone(id);
             try db.printTodo(stdout, id);
         },
         else => {},

@@ -94,4 +94,13 @@ pub const Database = struct {
 
         try print.todo(stdout, row.id, row.text, row.status);
     }
+
+    pub fn markDone(self: *Database, id: usize) !void {
+        _ = try self.db.one(
+            usize,
+            "UPDATE todo SET status = 'DONE' WHERE id = ?",
+            .{},
+            .{ .id = id },
+        );
+    }
 };
