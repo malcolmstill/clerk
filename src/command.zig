@@ -2,7 +2,7 @@ const std = @import("std");
 const mem = std.mem;
 
 pub const Command = enum {
-    todo,
+    add,
     done,
     status,
     edit,
@@ -12,8 +12,8 @@ pub const Command = enum {
 };
 
 pub fn parse(command: []const u8) !Command {
-    if (mem.eql(u8, command, "todo")) {
-        return .todo;
+    if (mem.eql(u8, command, "add")) {
+        return .add;
     } else if (mem.eql(u8, command, "done")) {
         return .done;
     } else if (mem.eql(u8, command, "status")) {

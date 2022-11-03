@@ -1,4 +1,5 @@
 const std = @import("std");
+const os = std.os;
 const fmt = std.fmt;
 const mem = std.mem;
 const sqlite = @import("sqlite");
@@ -14,8 +15,13 @@ pub const Database = struct {
     pub fn init(
         alloc: mem.Allocator,
     ) !Database {
+        const home = os.getenv("HOME") orelse "";
+        const slices: [3][]const u8 = .{ home, "/", ".clerk.db" };
+        const path = try mem.concatWithSentinel(alloc, u8, slices[0..], 0);
+        defer alloc.free(path);
+
         var db = try sqlite.Db.init(.{
-            .mode = sqlite.Db.Mode{ .File = "clerk.db" },
+            .mode = sqlite.Db.Mode{ .File = path[0..] },
             .open_flags = .{
                 .write = true,
                 .create = true,

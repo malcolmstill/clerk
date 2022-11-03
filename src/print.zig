@@ -6,7 +6,7 @@ const style = ansi.style;
 
 pub fn help(stdout: anytype) !void {
     try stdout.print("\n", .{});
-    try stdout.print("\ttodo [text]\t\tAdd a new todo\n", .{});
+    try stdout.print("\tadd [text]\t\tAdd a new todo\n", .{});
     try stdout.print("\tdone [id]\t\tMark todo as done\n", .{});
     try stdout.print("\tstatus [id] [status]\tChange status\n", .{});
     try stdout.print("\tedit [id]\t\tEdit todo as done\n", .{});
@@ -31,9 +31,9 @@ pub fn err(stdout: anytype, message: []const u8) !void {
 }
 
 pub fn todo(stdout: anytype, id: usize, text: []const u8, status: []const u8) !void {
-    const yellow = .{ .foreground = style.Color.Yellow };
-    const red = .{ .foreground = style.Color.Red };
-    const green = .{ .foreground = style.Color.Green };
+    const yellow = .{ .foreground = style.Color.Yellow, .font_style = style.FontStyle.bold };
+    const red = .{ .foreground = style.Color.Red, .font_style = style.FontStyle.bold };
+    const green = .{ .foreground = style.Color.Green, .font_style = style.FontStyle.bold };
 
     try stdout.print("[", .{});
     try format.updateStyle(stdout, yellow, null);
@@ -50,8 +50,7 @@ pub fn todo(stdout: anytype, id: usize, text: []const u8, status: []const u8) !v
     }
     try format.updateStyle(stdout, .{}, null);
 
-    const bold = .{ .font_style = style.FontStyle.bold };
-    try format.updateStyle(stdout, bold, null);
-    try stdout.print(": {s}\n", .{text});
+    try format.updateStyle(stdout, .{}, null);
+    try stdout.print(" {s}\n", .{text});
     try format.updateStyle(stdout, .{}, null);
 }

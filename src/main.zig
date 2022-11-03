@@ -20,11 +20,10 @@ pub fn main() !void {
 
     var it = process.args();
 
-    _ = it.next(); // Skip "clerk"
+    _ = it.next();
 
     const command_arg = it.next() orelse {
         try print.version(stdout);
-        try print.err(stdout, "Expected <command>\n\n");
         try stdout.print("Commands:\n", .{});
         try print.help(stdout);
         try bw.flush();
@@ -42,7 +41,7 @@ pub fn main() !void {
     };
 
     switch (command) {
-        .todo => {
+        .add => {
             const text = it.next() orelse {
                 try print.version(stdout);
                 try print.err(stdout, "Expected: clerk todo <text>\n\n");
