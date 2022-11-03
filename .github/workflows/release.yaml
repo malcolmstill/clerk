@@ -8,16 +8,16 @@ jobs:
   build_and_release:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+        target: [x86_64-linux, aarch64-macos]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
           version: 0.10.0
       - run: echo $GITHUB_REF_NAME > src/.version
-      - run: zig build -Drelease-safe=true
+      - run: zig build -Drelease-safe=true -Dtarget=${{ matrix.target }}
       - uses: actions/upload-artifact@v3
         with:
-          name: clerk-${{matrix.os}}
+          name: clerk-${{matrix.target}}
           path: zig-out/bin/clerk
