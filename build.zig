@@ -13,6 +13,8 @@ pub fn build(b: *std.build.Builder) void {
 
     const sqlite = b.addStaticLibrary("sqlite", null);
     sqlite.addCSourceFile("lib/zig-sqlite/c/sqlite3.c", &[_][]const u8{ "-std=c99", "-DSQLITE_ENABLE_FTS5" });
+    sqlite.setTarget(target);
+    sqlite.setBuildMode(mode);
     sqlite.linkLibC();
 
     const exe = b.addExecutable("clerk", "src/main.zig");
