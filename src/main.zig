@@ -7,14 +7,12 @@ const cmd = @import("command.zig");
 const Database = @import("db.zig").Database;
 
 pub fn main() !void {
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
     const stdout_file = io.getStdOut().writer();
     var bw = io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
     var db = try Database.init();
+    defer db.deinit();
 
     var it = process.args();
 
@@ -25,7 +23,7 @@ pub fn main() !void {
         try print.err(stdout, "Expected <command>\n\n");
         try stdout.print("Commands:\n", .{});
         try print.help(stdout);
-        try bw.flush(); // don't forget to flush!
+        try bw.flush();
         process.exit(1);
     };
 
@@ -35,7 +33,7 @@ pub fn main() !void {
         try stdout.print("{s}\n\n", .{command_arg});
         try stdout.print("Commands:\n", .{});
         try print.help(stdout);
-        try bw.flush(); // don't forget to flush!
+        try bw.flush();
         process.exit(1);
     };
 
@@ -44,16 +42,16 @@ pub fn main() !void {
             const text = it.next() orelse {
                 try print.version(stdout);
                 try print.err(stdout, "Expected: clerk todo <text>\n\n");
-                try bw.flush(); // don't forget to flush!
+                try bw.flush();
                 process.exit(1);
             };
 
-            const id = try db.addTodo(text);
+            const id = try db.addTodo(text, it);
 
             try stdout.print("[{}] TODO: {s}\n", .{ id, text });
         },
         else => {},
     }
 
-    try bw.flush(); // don't forget to flush!
+    try bw.flush();
 }
