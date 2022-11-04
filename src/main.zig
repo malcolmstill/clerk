@@ -21,7 +21,7 @@ pub fn main() !void {
 
     defer _ = bw.flush() catch {};
 
-    var it = process.argsWithAllocator(allocator);
+    var it = try process.argsWithAllocator(allocator);
     defer it.deinit();
 
     _ = it.next();
