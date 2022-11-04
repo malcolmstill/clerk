@@ -4,7 +4,7 @@ jobs:
   build:
     strategy:
       matrix:
-        target: [x86_64-linux, aarch64-macos, x86_64-macos]
+        target: [x86_64-linux, aarch64-macos, x86_64-macos, x86_64-windows]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
