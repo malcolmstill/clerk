@@ -3,3 +3,4 @@ zig-cache
 bin
 clerk.db
 .clerk.db
+v*.*.*
