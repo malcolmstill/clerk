@@ -26,4 +26,4 @@ jobs:
         if: ${{ matrix.target == 'x86_64-windows' }} 
         with:
           name: clerk-${{matrix.target}}
-          path: zig-out/bin/clerk-exe          
+          path: zig-out/bin/clerk.exe          
