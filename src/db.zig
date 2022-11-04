@@ -19,7 +19,9 @@ pub const Database = struct {
     };
 
     pub fn init(alloc: mem.Allocator) !Database {
-        const home = os.getenv("HOME") orelse "";
+        const home = process.getEnvVarOwned(alloc, "HOME") catch "";
+        defer alloc.free(home);
+
         const slices: [3][]const u8 = .{ home, "/", ".clerk.db" };
         const path = try mem.concatWithSentinel(alloc, u8, slices[0..], 0);
         defer alloc.free(path);

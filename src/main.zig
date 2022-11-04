@@ -10,17 +10,19 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
 pub fn main() !void {
     defer _ = gpa.deinit();
+    var allocator = gpa.allocator();
 
     const stdout_file = io.getStdOut().writer();
     var bw = io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    var db = try Database.init(gpa.allocator());
+    var db = try Database.init(allocator);
     defer db.deinit();
 
     defer _ = bw.flush() catch {};
 
-    var it = process.args();
+    var it = try process.argsWithAllocator(allocator);
+    defer it.deinit();
 
     _ = it.next();
 
