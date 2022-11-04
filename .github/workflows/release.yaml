@@ -21,3 +21,7 @@ jobs:
         with:
           name: clerk-${{matrix.target}}
           path: zig-out/bin/clerk
+      - uses: actions/upload-artifact@v3
+        with:
+          name: clerk-${{matrix.target}}
+          path: zig-out/bin/clerk-exe          
