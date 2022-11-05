@@ -42,7 +42,7 @@ pub fn main() !void {
     };
 
     switch (command) {
-        .add => {
+        .todo => {
             const text = it.next() orelse {
                 try print.addExpectsText(stdout);
                 return;
@@ -65,7 +65,7 @@ pub fn main() !void {
 
             try db.printTodo(stdout, id);
         },
-        .todo => try db.printAllTodos(stdout),
+        .list => try db.printAllTodos(stdout),
         .search => {
             const search_term = it.next() orelse {
                 try print.searchExpectsTerm(stdout);

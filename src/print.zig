@@ -7,8 +7,8 @@ const style = ansi.style;
 pub fn help(stdout: anytype) !void {
     try version(stdout);
     try stdout.print("\n", .{});
-    try stdout.print("    todo             Print todos\n", .{});
-    try stdout.print("    add [text]       Add a new todo\n", .{});
+    try stdout.print("    list             List todos\n", .{});
+    try stdout.print("    todo [text]      Add a new todo\n", .{});
     try stdout.print("    done [id]        Mark todo as done\n", .{});
     try stdout.print("    search [text]    Search todos\n", .{});
     // try stdout.print("\tstatus [id] [status]\tChange status\n", .{});
