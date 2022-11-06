@@ -20,10 +20,10 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.target != 'x86_64-windows' }} 
         with:
-          name: clerk-${{matrix.target}}
+          name: clerk-${{ env.GITHUB_REF_NAME }}-${{matrix.target}}
           path: zig-out/bin/clerk
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.target == 'x86_64-windows' }} 
         with:
-          name: clerk-$GITHUB_REF_NAME-${{matrix.target}}
+          name: clerk-${{ env.GITHUB_REF_NAME }}-${{matrix.target}}
           path: zig-out/bin/clerk.exe          
