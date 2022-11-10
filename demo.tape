@@ -44,6 +44,12 @@ Sleep 100ms
 Enter
 Sleep 500ms
 
+Type 'clerk list'
+Sleep 100ms
+
+Enter
+Sleep 500ms
+
 Type 'clerk search "lin*"'
 Sleep 100ms
 
