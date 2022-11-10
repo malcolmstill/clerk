@@ -32,7 +32,7 @@ jobs:
       - uses: goto-bus-stop/setup-zig@v1
         with:
           version: 0.10.0
-      - run: echo $GITHUB_REF_NAME > src/.version
+      - run: echo -n $GITHUB_REF_NAME > src/.version
       - run: zig build -Drelease-safe=true -Dtarget=${{ matrix.target }}
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.target != 'x86_64-windows' }} 
