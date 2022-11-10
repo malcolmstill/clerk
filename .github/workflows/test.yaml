@@ -1,5 +1,11 @@
 name: clerk tests
 on: push
+  paths:
+    - src/**
+    - lib/**
+    - build.zig
+    - .github/workflows/test.yaml
+
 jobs:
   build:
     strategy:
