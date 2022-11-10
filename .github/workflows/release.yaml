@@ -5,6 +5,23 @@ on:
       - "v*"
 
 jobs:
+  gif:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.10.0
+      - run: echo $GITHUB_REF_NAME > src/.version
+      - run: zig build
+      - run: echo "zig-out/bin" >> $GITHUB_PATH
+      - uses: charmbracelet/vhs-action@v1
+        with:
+          path: 'demo.tape'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: demo-${{ github.ref_name }}.gif
+          path: demo.gif
   build_and_release:
     strategy:
       matrix:
