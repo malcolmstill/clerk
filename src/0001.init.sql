@@ -1,13 +1,13 @@
 CREATE TABLE status (
     id TEXT PRIMARY KEY
-);
+) STRICT;
 --
 CREATE TABLE todo (
     id INTEGER PRIMARY KEY NOT NULL,
     status TEXT NOT NULL,
     text TEXT NOT NULL,
     FOREIGN KEY(status) REFERENCES status(id)
-);
+) STRICT;
 -- 
 CREATE TABLE ref (
     id INTEGER NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE ref (
     PRIMARY KEY (id, referer),
     FOREIGN KEY(id) REFERENCES todo(id),
     FOREIGN KEY(referer) REFERENCES todo(id)
-);
+) STRICT;
 --
 INSERT INTO status (id) VALUES ('TODO');
 INSERT INTO status (id) VALUES ('DONE');
