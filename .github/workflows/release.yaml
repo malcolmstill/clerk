@@ -25,7 +25,8 @@ jobs:
   build_and_release:
     strategy:
       matrix:
-        target: [x86_64-linux, x86_64-macos, x86_64-windows, aarch64-linux, aarch64-macos, aarch64-windows]
+        target: [x86_64, aarch64]
+        os: [linux, macos, windows]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -33,14 +34,14 @@ jobs:
         with:
           version: 0.10.0
       - run: echo -n $GITHUB_REF_NAME > src/.version
-      - run: zig build -Drelease-safe=true -Dtarget=${{ matrix.target }}
+      - run: zig build -Drelease-safe=true -Dtarget=${{ matrix.target }}-${{ matrix.os }}
       - uses: actions/upload-artifact@v3
-        if: ${{ matrix.target != 'x86_64-windows' }} 
+        if: ${{ matrix.os != 'windows' }} 
         with:
-          name: clerk-${{ github.ref_name }}-${{matrix.target}}
+          name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
           path: zig-out/bin/clerk
       - uses: actions/upload-artifact@v3
-        if: ${{ matrix.target == 'x86_64-windows' }} 
+        if: ${{ matrix.os == 'windows' }} 
         with:
-          name: clerk-${{ github.ref_name }}-${{matrix.target}}
+          name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
           path: zig-out/bin/clerk.exe

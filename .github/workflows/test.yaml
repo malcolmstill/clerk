@@ -11,14 +11,15 @@ jobs:
   build:
     strategy:
       matrix:
-        target: [x86_64-linux, x86_64-macos, x86_64-windows, aarch64-linux, aarch64-macos, aarch64-windows]
+        target: [x86_64, aarch64]
+        os: [linux, macos, windows]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
           version: 0.10.0
-      - run: zig build -Dtarget=${{ matrix.target }}
+      - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
   lint:
     runs-on: ubuntu-latest
     steps:
