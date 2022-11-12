@@ -1,5 +1,7 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const os = std.os;
+const fs = std.fs;
 const fmt = std.fmt;
 const mem = std.mem;
 const sqlite = @import("sqlite");
@@ -19,11 +21,11 @@ pub const Database = struct {
     };
 
     pub fn init(alloc: mem.Allocator) !Database {
-        const home = process.getEnvVarOwned(alloc, "HOME") catch "";
+        const home = try getHome(alloc);
         defer alloc.free(home);
 
-        const slices: [3][]const u8 = .{ home, "/", ".clerk.db" };
-        const path = try mem.concatWithSentinel(alloc, u8, slices[0..], 0);
+        const slices: [2][]const u8 = .{ home, "clerk.db" };
+        const path = try fs.path.joinZ(alloc, slices[0..]);
         defer alloc.free(path);
 
         var db = try sqlite.Db.init(.{
@@ -140,3 +142,17 @@ pub const Database = struct {
         }
     }
 };
+
+fn getHome(alloc: mem.Allocator) ![]u8 {
+    if (builtin.os.tag == .windows) {
+        const homedrive = process.getEnvVarOwned(alloc, "homedrive") catch return error.NoHomeDrive;
+        defer alloc.free(homedrive);
+        const homepath = process.getEnvVarOwned(alloc, "homepath") catch return error.NoHomePath;
+        defer alloc.free(homepath);
+
+        const slices: [2][]const u8 = .{ homedrive, homepath };
+        return fs.path.joinZ(alloc, slices[0..]);
+    } else {
+        return process.getEnvVarOwned(alloc, "HOME") catch return error.NoHome;
+    }
+}
