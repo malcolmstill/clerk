@@ -1,6 +1,6 @@
 # clerk
 
-![demo](https://user-images.githubusercontent.com/2567177/201222635-95107f9c-77c0-4706-a537-0c671386f313.gif)
+![demo](https://user-images.githubusercontent.com/2567177/201475799-151307c1-b41a-4d77-918e-cace181263cd.gif)
 
 ## Installation
 
