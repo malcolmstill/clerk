@@ -24,7 +24,7 @@ pub const Database = struct {
         const home = try getHome(alloc);
         defer alloc.free(home);
 
-        const slices: [2][]const u8 = .{ home, "clerk.db" };
+        const slices: [2][]const u8 = .{ home, ".clerk.db" };
         const path = try fs.path.joinZ(alloc, slices[0..]);
         defer alloc.free(path);
 
