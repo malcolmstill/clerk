@@ -4,9 +4,9 @@
 
 ## Installation
 
-- Download a binary for your platform from [our release page](https://github.com/malcolmstill/clerk/releases)
+- Download a binary for your platform from [the release page](https://github.com/malcolmstill/clerk/releases)
 - linux / macos: `chmod u+x clerk`
-- Ideally stick it somewhere in your `PATH`
+- Ideally stick `clerk` somewhere in your `PATH`
 
 ## Dependencies
 
