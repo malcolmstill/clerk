@@ -28,16 +28,3 @@ jobs:
         with:
           version: 0.13.0
       - run: zig fmt --check src/*.zig
-  gif:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: goto-bus-stop/setup-zig@v1
-        with:
-          version: 0.13.0
-      - run: echo -n $GITHUB_REF_NAME > src/.version
-      - run: zig build
-      - run: echo "zig-out/bin" >> $GITHUB_PATH
-      - uses: charmbracelet/vhs-action@v2
-        with:
-          path: "demo.tape"
