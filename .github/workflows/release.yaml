@@ -11,13 +11,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
-          version: 0.10.0
+          version: 0.13.0
       - run: echo -n $GITHUB_REF_NAME > src/.version
       - run: zig build
       - run: echo "zig-out/bin" >> $GITHUB_PATH
       - uses: charmbracelet/vhs-action@v1
         with:
-          path: 'demo.tape'
+          path: "demo.tape"
       - uses: actions/upload-artifact@v3
         with:
           name: demo-${{ github.ref_name }}.gif
@@ -32,16 +32,16 @@ jobs:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
-          version: 0.10.0
+          version: 0.13.0
       - run: echo -n $GITHUB_REF_NAME > src/.version
       - run: zig build -Drelease-safe=true -Dtarget=${{ matrix.target }}-${{ matrix.os }}
       - uses: actions/upload-artifact@v3
-        if: ${{ matrix.os != 'windows' }} 
+        if: ${{ matrix.os != 'windows' }}
         with:
           name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
           path: zig-out/bin/clerk
       - uses: actions/upload-artifact@v3
-        if: ${{ matrix.os == 'windows' }} 
+        if: ${{ matrix.os == 'windows' }}
         with:
           name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
           path: zig-out/bin/clerk.exe
