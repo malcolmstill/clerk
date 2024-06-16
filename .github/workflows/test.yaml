@@ -27,7 +27,7 @@ jobs:
       - uses: goto-bus-stop/setup-zig@v1
         with:
           version: 0.13.0
-      - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
+      - run: zig build
       - run: zig-out/bin/clerk
   lint:
     runs-on: ubuntu-latest
