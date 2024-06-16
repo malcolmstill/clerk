@@ -42,7 +42,7 @@ pub const Database = struct {
         const row = (try db.pragma(usize, .{}, "user_version", null)) orelse return error.ReadUserVersionFailed;
 
         if (row < migrations.len) {
-            inline for (migrations) |m, i| {
+            inline for (migrations, 0..) |m, i| {
                 if (i >= row) {
                     _ = try db.execMulti(m, .{});
                     _ = try db.pragma(

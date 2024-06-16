@@ -10,7 +10,7 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
 pub fn main() !void {
     defer _ = gpa.deinit();
-    var allocator = gpa.allocator();
+    const allocator = gpa.allocator();
 
     const stdout_file = io.getStdOut().writer();
     var bw = io.bufferedWriter(stdout_file);
