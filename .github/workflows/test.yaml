@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
-          version: 0.10.0
+          version: 0.13.0
       - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
   lint:
     runs-on: ubuntu-latest
@@ -26,5 +26,5 @@ jobs:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
-          version: 0.10.0
+          version: 0.13.0
       - run: zig fmt --check src/*.zig
