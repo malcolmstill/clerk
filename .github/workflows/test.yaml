@@ -20,6 +20,15 @@ jobs:
         with:
           version: 0.13.0
       - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.13.0
+      - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
+      - run: zig-out/bin/clerk
   lint:
     runs-on: ubuntu-latest
     steps:
