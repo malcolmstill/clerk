@@ -5,6 +5,7 @@ on:
       - src/**
       - lib/**
       - build.zig
+      - build.zig.zon
       - .github/workflows/test.yaml
 
 jobs:
@@ -18,13 +19,22 @@ jobs:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
-          version: 0.13.0
+          version: master
       - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: master
+      - run: zig build
+      - run: zig-out/bin/clerk
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: goto-bus-stop/setup-zig@v1
         with:
-          version: 0.13.0
+          version: master
       - run: zig fmt --check src/*.zig
