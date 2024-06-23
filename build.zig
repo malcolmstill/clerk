@@ -7,22 +7,8 @@ pub fn build(b: *std.Build) void {
     const sqlite = b.dependency("sqlite", .{
         .target = target,
         .optimize = optimize,
+        .fts5 = true,
     });
-
-    const lib_sqlite = b.addStaticLibrary(.{
-        .name = "sqlite",
-        .target = target,
-        .optimize = optimize,
-    });
-    lib_sqlite.addCSourceFile(.{
-        .file = b.path("lib/zig-sqlite/c/sqlite3.c"),
-        .flags = &[_][]const u8{
-            "-std=c99",
-            "-DSQLITE_ENABLE_FTS5",
-        },
-    });
-    lib_sqlite.addIncludePath(b.path("lib/zig-sqlite/c"));
-    lib_sqlite.linkLibC();
 
     const @"ansi-term" = b.dependency("ansi-term", .{
         .target = target,
@@ -39,7 +25,7 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addImport("ansi-term", @"ansi-term".module("ansi-term"));
 
     // links the bundled sqlite3, so leave this out if you link the system one
-    exe.linkLibrary(lib_sqlite);
+    exe.linkLibrary(sqlite.artifact("sqlite"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
