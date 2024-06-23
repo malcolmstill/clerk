@@ -5,6 +5,7 @@ on:
       - src/**
       - lib/**
       - build.zig
+      - build.zig.zon
       - .github/workflows/test.yaml
 
 jobs:
