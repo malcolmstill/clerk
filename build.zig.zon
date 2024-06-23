@@ -3,7 +3,7 @@
     .version = "0.0.0",
     .dependencies = .{
         .sqlite = .{
-            .url = "https://github.com/malcolmstill/zig-sqlite/archive/878f8cf92b308dabe2dce9e24bd7849e005f7ab5.tar.gz",
+            .url = "https://github.com/vrischmann/zig-sqlite/archive/878f8cf92b308dabe2dce9e24bd7849e005f7ab5.tar.gz",
             .hash = "1220a3ff3c8e2a41fe0fe73e795e0eee4c3882edceef8ef16b0b250c7895709a9192",
         },
         .@"ansi-term" = .{
