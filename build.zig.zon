@@ -3,14 +3,12 @@
     .version = "0.0.0",
     .dependencies = .{
         .sqlite = .{
-            .url = "https://github.com/vrischmann/zig-sqlite/archive/878f8cf92b308dabe2dce9e24bd7849e005f7ab5.tar.gz",
-            .hash = "1220a3ff3c8e2a41fe0fe73e795e0eee4c3882edceef8ef16b0b250c7895709a9192",
+            .url = "https://github.com/vrischmann/zig-sqlite/archive/7165a6e4e4b82c8acc058d6a400096010445770c.tar.gz",
+            .hash = "1220c154890f02ff02d4b1e5e3753f826c045779164774c9e9fb962095947b47bb19",
         },
         .@"ansi-term" = .{
-            // ansi-term not yet on zig-0.13.0
-            // .url = "https://github.com/ziglibs/ansi-term/archive/f9ea80dc9769dfffbb4c56a904149940c79168da.tar.gz",
-            // .hash = "1220c650d57ceb323d3e74945189aaae7a9c0ac74afd023cba5533fb7d5874b2955c",
-            .path = "lib/ansi-term",
+            .url = "git+https://github.com/ziglibs/ansi-term/?ref=HEAD#010f170cbe72786ed52645a9dd6cde27b02b47b4",
+            .hash = "12203a64b02d46e6c2e268b7da60cb11b2fa83dc580cad77cf330d1438e2280de46f",
         },
     },
     .paths = .{""},
