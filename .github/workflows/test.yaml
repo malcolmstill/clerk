@@ -17,24 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: goto-bus-stop/setup-zig@v1
-        with:
-          version: master
+      - uses: mlugg/setup-zig@v2.0.5
       - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: goto-bus-stop/setup-zig@v1
-        with:
-          version: master
+      - uses: mlugg/setup-zig@v2.0.5
       - run: zig build
       - run: zig-out/bin/clerk
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: goto-bus-stop/setup-zig@v1
-        with:
-          version: master
+      - uses: mlugg/setup-zig@v2.0.5
       - run: zig fmt --check src/*.zig
