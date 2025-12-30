@@ -12,14 +12,14 @@ pub fn main() !void {
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    const stdout_file = io.getStdOut().writer();
-    var bw = io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
+    var stdout_buffer: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    const stdout = &stdout_writer.interface;
 
     var db = try Database.init(allocator);
     defer db.deinit();
 
-    defer _ = bw.flush() catch {};
+    defer _ = stdout.flush() catch {};
 
     var it = try process.argsWithAllocator(allocator);
     defer it.deinit();
@@ -37,7 +37,7 @@ pub fn main() !void {
         try stdout.print("{s}\n\n", .{command_arg});
         try stdout.print("Commands:\n", .{});
         try print.help(stdout);
-        try bw.flush();
+        try stdout.flush();
         process.exit(1);
     };
 
