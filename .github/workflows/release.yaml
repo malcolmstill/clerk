@@ -9,39 +9,62 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: goto-bus-stop/setup-zig@v1
-        with:
-          version: master
+      - uses: mlugg/setup-zig@v2.0.5
       - run: echo -n $GITHUB_REF_NAME > src/.version
       - run: zig build
       - run: echo "zig-out/bin" >> $GITHUB_PATH
-      - uses: charmbracelet/vhs-action@v2
-        with:
-          path: "demo.tape"
-      - uses: actions/upload-artifact@v3
+      - name: Create gif # See https://github.com/charmbracelet/vhs-action/issues/459 for why this isn't using the action
+        run: |
+          sudo apt-get install -y --no-install-recommends ffmpeg ttyd
+          go install github.com/charmbracelet/vhs@latest
+          ~/go/bin/vhs demo.tape
+      - uses: actions/upload-artifact@v4
         with:
           name: demo-${{ github.ref_name }}.gif
           path: demo.gif
-  build_and_release:
+  build:
     strategy:
       matrix:
         target: [x86_64, aarch64]
-        os: [linux, macos, windows]
+        os: [linux, macos, windows, freebsd, netbsd]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: goto-bus-stop/setup-zig@v1
-        with:
-          version: master
+      - uses: mlugg/setup-zig@v2.0.5
       - run: echo -n $GITHUB_REF_NAME > src/.version
-      - run: zig build -Doptimize=ReleaseSafe -Dtarget=${{ matrix.target }}-${{ matrix.os }}
-      - uses: actions/upload-artifact@v3
+
+      - name: Build clerk
+        run: |
+          zig build -Doptimize=ReleaseSafe -Dtarget=${{ matrix.target }}-${{ matrix.os }}
+
+      - name: Compress output
         if: ${{ matrix.os != 'windows' }}
-        with:
-          name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
-          path: zig-out/bin/clerk
-      - uses: actions/upload-artifact@v3
+        run: |
+          zip clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip zig-out/bin/clerk -j
+
+      - name: Compress output
         if: ${{ matrix.os == 'windows' }}
+        run: |
+          zip clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip zig-out/bin/clerk.exe -j
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
-          path: zig-out/bin/clerk.exe
+          name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip
+          path: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      - name: List artifacts
+        run: ls -R ./artifacts
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          generate_release_notes: true
+          files: |
+            artifacts/**/**/*.zip

@@ -1,16 +1,16 @@
 .{
-    .name = "clerk",
+    .name = .clerk,
+    .fingerprint = 0xe0351854c54cf751,
+    .minimum_zig_version = "0.15.2",
     .version = "0.0.0",
     .dependencies = .{
         .sqlite = .{
-            .url = "https://github.com/vrischmann/zig-sqlite/archive/878f8cf92b308dabe2dce9e24bd7849e005f7ab5.tar.gz",
-            .hash = "1220a3ff3c8e2a41fe0fe73e795e0eee4c3882edceef8ef16b0b250c7895709a9192",
+            .url = "git+https://github.com/vrischmann/zig-sqlite#0b75ba276d34de3141ec1697e3ef7c836d7b38e7",
+            .hash = "sqlite-3.48.0-F2R_a8eODgD9X8XjvWlZ1K7C-tDuHae4FuShM2N-yIT2",
         },
-        .@"ansi-term" = .{
-            // ansi-term not yet on zig-0.13.0
-            // .url = "https://github.com/ziglibs/ansi-term/archive/f9ea80dc9769dfffbb4c56a904149940c79168da.tar.gz",
-            // .hash = "1220c650d57ceb323d3e74945189aaae7a9c0ac74afd023cba5533fb7d5874b2955c",
-            .path = "lib/ansi-term",
+        .ansi_term = .{
+            .url = "git+https://github.com/ziglibs/ansi_term#9c0f22d83605a69754e4c4f409c017c569b0b8a1",
+            .hash = "ansi_term-0.1.0-_baAywpoAABEqsPmS5Jz_CddDCrG8qdIyRIESH8D2fzd",
         },
     },
     .paths = .{""},

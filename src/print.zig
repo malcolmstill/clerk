@@ -1,6 +1,6 @@
 const std = @import("std");
 const mem = std.mem;
-const ansi = @import("ansi-term");
+const ansi = @import("ansi_term");
 const format = ansi.format;
 const style = ansi.style;
 
@@ -21,14 +21,14 @@ pub fn help(stdout: anytype) !void {
 const version_number = @embedFile(".version");
 
 pub fn version(stdout: anytype) !void {
-    const bold = .{ .font_style = style.FontStyle.bold };
+    const bold: style.Style = .{ .font_style = .{ .bold = true } };
     try format.updateStyle(stdout, bold, null);
     try stdout.print("clerk {s}\n", .{version_number});
     try format.updateStyle(stdout, .{}, bold);
 }
 
 pub fn err(stdout: anytype, message: []const u8) !void {
-    const sty = .{ .foreground = style.Color.Red };
+    const sty: style.Style = .{ .foreground = style.Color.Red };
     try format.updateStyle(stdout, sty, null);
     try stdout.print("{s}", .{message});
     try format.updateStyle(stdout, .{}, sty);
@@ -75,6 +75,6 @@ pub fn noSuchId(stdout: anytype, id: usize) !void {
     try stdout.print("]\n", .{});
 }
 
-const yellow = .{ .foreground = style.Color.Yellow, .font_style = style.FontStyle.bold };
-const red = .{ .foreground = style.Color.Red, .font_style = style.FontStyle.bold };
-const green = .{ .foreground = style.Color.Green, .font_style = style.FontStyle.bold };
+const yellow: style.Style = .{ .foreground = style.Color.Yellow, .font_style = .{ .bold = true } };
+const red: style.Style = .{ .foreground = style.Color.Red, .font_style = .{ .bold = true } };
+const green: style.Style = .{ .foreground = style.Color.Green, .font_style = .{ .bold = true } };

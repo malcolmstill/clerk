@@ -10,19 +10,22 @@ pub fn build(b: *std.Build) void {
         .fts5 = true,
     });
 
-    const @"ansi-term" = b.dependency("ansi-term", .{
+    const @"ansi-term" = b.dependency("ansi_term", .{
         .target = target,
         .optimize = optimize,
     });
 
     const exe = b.addExecutable(.{
         .name = "clerk",
-        .root_source_file = b.path("src/main.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/main.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+        .use_llvm = true,
     });
     exe.root_module.addImport("sqlite", sqlite.module("sqlite"));
-    exe.root_module.addImport("ansi-term", @"ansi-term".module("ansi-term"));
+    exe.root_module.addImport("ansi_term", @"ansi-term".module("ansi_term"));
 
     // links the bundled sqlite3, so leave this out if you link the system one
     exe.linkLibrary(sqlite.artifact("sqlite"));
@@ -56,9 +59,11 @@ pub fn build(b: *std.Build) void {
     run_step.dependOn(&run_cmd.step);
 
     const exe_unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/main.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/main.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
     });
 
     const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
