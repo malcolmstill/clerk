@@ -42,6 +42,7 @@ jobs:
           name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
           path: zig-out/bin/clerk.exe
   release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Fetch artifacts
