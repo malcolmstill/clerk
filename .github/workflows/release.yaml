@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         target: [x86_64, aarch64]
-        os: [linux, macos, windows]
+        os: [linux, macos, windows, freebsd, netbsd]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
