@@ -16,7 +16,7 @@ jobs:
       - uses: charmbracelet/vhs-action@v2
         with:
           path: "demo.tape"
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: demo-${{ github.ref_name }}.gif
           path: demo.gif
