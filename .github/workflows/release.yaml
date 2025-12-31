@@ -22,7 +22,7 @@ jobs:
         with:
           name: demo-${{ github.ref_name }}.gif
           path: demo.gif
-  build_and_release:
+  build:
     strategy:
       matrix:
         target: [x86_64, aarch64]
@@ -45,3 +45,19 @@ jobs:
         with:
           name: clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}
           path: zig-out/bin/clerk.exe
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      - name: List artifacts
+        run: ls -R ./artifacts
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          generate_release_notes: true
+          files: |
+            artifacts/**/**/*
