@@ -22,6 +22,7 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
         }),
+        .use_llvm = true,
     });
     exe.root_module.addImport("sqlite", sqlite.module("sqlite"));
     exe.root_module.addImport("ansi_term", @"ansi-term".module("ansi_term"));
