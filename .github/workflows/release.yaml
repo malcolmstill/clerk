@@ -17,7 +17,7 @@ jobs:
         run: |
           sudo apt-get install -y --no-install-recommends ffmpeg ttyd
           go install github.com/charmbracelet/vhs@latest
-          vhs demo.tape
+          ~/go/bin/vhs demo.tape
       - uses: actions/upload-artifact@v4
         with:
           name: demo-${{ github.ref_name }}.gif
