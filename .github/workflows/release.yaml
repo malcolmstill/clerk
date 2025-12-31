@@ -13,9 +13,11 @@ jobs:
       - run: echo -n $GITHUB_REF_NAME > src/.version
       - run: zig build
       - run: echo "zig-out/bin" >> $GITHUB_PATH
-      - uses: charmbracelet/vhs-action@v2
-        with:
-          path: "demo.tape"
+      - name: Create gif # See https://github.com/charmbracelet/vhs-action/issues/459 for why this isn't using the action
+        run: |
+          sudo apt-get install -y --no-install-recommends ffmpeg ttyd
+          go install github.com/charmbracelet/vhs@latest
+          vhs demo.tape
       - uses: actions/upload-artifact@v4
         with:
           name: demo-${{ github.ref_name }}.gif
