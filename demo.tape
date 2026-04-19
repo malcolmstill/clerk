@@ -26,13 +26,16 @@ Sleep 100ms
 Enter
 Sleep 500ms
 
-Type 'clerk todo "Recompile Linux kernel"'
+Type 'clerk todo "Tag new clerk release"'
 Sleep 100ms
 
 Enter
 Sleep 500ms
 
-Type 'clerk todo "Install fedora linux"'
+Type 'clerk todo "Add OpenBSD release build"'
+Sleep 100ms
+
+Type 'clerk list'
 Sleep 100ms
 
 Enter
@@ -50,7 +53,7 @@ Sleep 100ms
 Enter
 Sleep 500ms
 
-Type 'clerk search "lin*"'
+Type 'clerk search release'
 Sleep 100ms
 
 Enter
