@@ -27,6 +27,7 @@ jobs:
       matrix:
         target: [x86_64, aarch64]
         os: [linux, macos, windows, freebsd, netbsd]
+        exec_suffix: ["", "", ".exe", "", ""]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,14 +39,8 @@ jobs:
           zig build -Doptimize=ReleaseSafe -Dtarget=${{ matrix.target }}-${{ matrix.os }}
 
       - name: Compress output
-        if: ${{ matrix.os != 'windows' }}
         run: |
-          zip clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip zig-out/bin/clerk -j
-
-      - name: Compress output
-        if: ${{ matrix.os == 'windows' }}
-        run: |
-          zip clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip zig-out/bin/clerk.exe -j
+          zip clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip zig-out/bin/clerk${{ matrix.exec_suffix }} -j
 
       - uses: actions/upload-artifact@v4
         with:
