@@ -10,7 +10,8 @@
    - Windows
    - MacOS
    - FreeBSD
-   - NetBSD 
+   - NetBSD
+   - OpenBSD
 - Ideally stick `clerk` somewhere in your `PATH`
 
 ## Dependencies
@@ -27,5 +28,5 @@
 
 ### I'd rather compile from source than download the binaries. How do I do that?
 
-- To build from source only requires zig 0.15.2.
+- To build from source only requires zig 0.16.0.
 - Download the source and run `zig build`
