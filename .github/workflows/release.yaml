@@ -8,8 +8,14 @@ jobs:
   gif:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2   
       - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: master
+      - run: zig build --fetch
+      - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: 0.16.0r
       - run: echo -n $GITHUB_REF_NAME > src/.version
       - run: zig build
       - run: echo "zig-out/bin" >> $GITHUB_PATH
@@ -31,6 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: master
+      - run: zig build --fetch
       - uses: mlugg/setup-zig@v2.0.5
         with:
           version: 0.16.0

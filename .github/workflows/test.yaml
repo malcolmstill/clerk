@@ -17,12 +17,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # Hack: zig fetch failing to pull down amalgamation file on 0.16.0 so fetch with master first
       - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: master
+      - run: zig build --fetch
+      - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: 0.16.0
       - run: zig build -Dtarget=${{ matrix.target }}-${{ matrix.os }}
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: master
+      - run: zig build --fetch  
       - uses: mlugg/setup-zig@v2.0.5
         with:
           version: 0.16.0
@@ -32,6 +43,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: master
+      - run: zig build --fetch  
       - uses: mlugg/setup-zig@v2.0.5
         with:
           version: 0.16.0
