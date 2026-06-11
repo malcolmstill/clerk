@@ -9,6 +9,25 @@ on:
       - .github/workflows/test.yaml
 
 jobs:
+  gif:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2   
+      - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: master
+      - run: zig build --fetch
+      - uses: mlugg/setup-zig@v2.0.5
+        with:
+          version: 0.16.0
+      - run: echo -n $GITHUB_REF_NAME > src/.version
+      - run: zig build
+      - run: echo "zig-out/bin" >> $GITHUB_PATH
+      - name: Create gif # See https://github.com/charmbracelet/vhs-action/issues/459 for why this isn't using the action
+        run: |
+          sudo apt-get install -y --no-install-recommends ffmpeg ttyd
+          go install github.com/charmbracelet/vhs@latest
+          ~/go/bin/vhs demo.tape
   build:
     strategy:
       fail-fast: false
