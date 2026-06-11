@@ -1,27 +1,29 @@
 const std = @import("std");
 const fs = std.fs;
-const io = std.io;
 const fmt = std.fmt;
 const process = std.process;
 const print = @import("print.zig");
 const cmd = @import("command.zig");
 const Database = @import("db.zig").Database;
-var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+const builtin = @import("builtin");
 
-pub fn main() !void {
-    defer _ = gpa.deinit();
-    const allocator = gpa.allocator();
+pub fn main(init: std.process.Init) !void {
+    const allocator = init.arena.allocator();
+
+    const io = init.io;
 
     var stdout_buffer: [1024]u8 = undefined;
-    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    var stdout_writer: std.Io.File.Writer = .init(.stdout(), io, &stdout_buffer);
     const stdout = &stdout_writer.interface;
 
-    var db = try Database.init(allocator);
+    const home = try getHome(init, allocator);
+
+    var db = try Database.init(allocator, home);
     defer db.deinit();
 
     defer _ = stdout.flush() catch {};
 
-    var it = try process.argsWithAllocator(allocator);
+    var it = try init.minimal.args.iterateAllocator(allocator);
     defer it.deinit();
 
     _ = it.next();
@@ -74,5 +76,17 @@ pub fn main() !void {
 
             try db.search(stdout, search_term);
         },
+    }
+}
+
+fn getHome(init: std.process.Init, allocator: std.mem.Allocator) ![]const u8 {
+    if (builtin.os.tag == .windows) {
+        const homedrive = init.environ_map.get("homedrive") orelse return error.NoHomeDrive;
+        const homepath = init.environ_map.get("homepath") orelse return error.NoHomePath;
+
+        const slices: [2][]const u8 = .{ homedrive, homepath };
+        return fs.path.joinZ(allocator, slices[0..]);
+    } else {
+        return init.environ_map.get("HOME") orelse return error.NoHome;
     }
 }

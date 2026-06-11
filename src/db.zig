@@ -1,5 +1,5 @@
 const std = @import("std");
-const builtin = @import("builtin");
+
 const os = std.os;
 const fs = std.fs;
 const fmt = std.fmt;
@@ -20,10 +20,7 @@ pub const Database = struct {
         status: []const u8,
     };
 
-    pub fn init(alloc: mem.Allocator) !Database {
-        const home = try getHome(alloc);
-        defer alloc.free(home);
-
+    pub fn init(alloc: mem.Allocator, home: []const u8) !Database {
         const slices: [2][]const u8 = .{ home, ".clerk.db" };
         const path = try fs.path.joinZ(alloc, slices[0..]);
         defer alloc.free(path);
@@ -65,7 +62,7 @@ pub const Database = struct {
         self.db.deinit();
     }
 
-    pub fn addTodo(self: *Database, text: []const u8, it: *process.ArgIterator) !usize {
+    pub fn addTodo(self: *Database, text: []const u8, it: *std.process.Args.Iterator) !usize {
         var savepoint = try self.db.savepoint("todo_with_references");
         defer savepoint.rollback();
 
@@ -142,17 +139,3 @@ pub const Database = struct {
         }
     }
 };
-
-fn getHome(alloc: mem.Allocator) ![]u8 {
-    if (builtin.os.tag == .windows) {
-        const homedrive = process.getEnvVarOwned(alloc, "homedrive") catch return error.NoHomeDrive;
-        defer alloc.free(homedrive);
-        const homepath = process.getEnvVarOwned(alloc, "homepath") catch return error.NoHomePath;
-        defer alloc.free(homepath);
-
-        const slices: [2][]const u8 = .{ homedrive, homepath };
-        return fs.path.joinZ(alloc, slices[0..]);
-    } else {
-        return process.getEnvVarOwned(alloc, "HOME") catch return error.NoHome;
-    }
-}
