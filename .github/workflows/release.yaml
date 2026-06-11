@@ -34,7 +34,9 @@ jobs:
       matrix:
         target: [x86_64, aarch64]
         os: [linux, macos, windows, freebsd, netbsd, openbsd]
-        exec_suffix: ["", "", ".exe", "", "", ""]
+    env:
+      EXE_SUFFIX: ${{ matrix.os == 'windows' && '.exe' || '' }}
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -53,7 +55,7 @@ jobs:
 
       - name: Compress output
         run: |
-          zip clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip zig-out/bin/clerk${{ matrix.exec_suffix }} -j
+          zip clerk-${{ github.ref_name }}-${{ matrix.target }}-${{ matrix.os }}.zip zig-out/bin/clerk${{ env.EXE_SUFFIX }} -j
 
       - uses: actions/upload-artifact@v4
         with:
