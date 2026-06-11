@@ -15,7 +15,7 @@ jobs:
       - run: zig build --fetch
       - uses: mlugg/setup-zig@v2.0.5
         with:
-          version: 0.16.0r
+          version: 0.16.0
       - run: echo -n $GITHUB_REF_NAME > src/.version
       - run: zig build
       - run: echo "zig-out/bin" >> $GITHUB_PATH
