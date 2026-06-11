@@ -30,6 +30,7 @@ jobs:
           path: demo.gif
   build:
     strategy:
+      fail-fast: false
       matrix:
         target: [x86_64, aarch64]
         os: [linux, macos, windows, freebsd, netbsd, openbsd]
